@@ -1,0 +1,28 @@
+{
+  "dependencies": {
+    "@supabase/supabase-js": "^2.119.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
+  },
+  "description": "Creator dashboard for Ace Studio — a separate app sharing the same Supabase database. Admin-only; all data access goes through Row Level Security with the creator's own login. No service-role key anywhere in this app.",
+  "devDependencies": {
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "@vitejs/plugin-react": "^4.3.4",
+    "prettier": "^3.6.2",
+    "typescript": "^5.9.3",
+    "vite": "^6.3.5",
+    "vitest": "^3.2.4"
+  },
+  "name": "ace-studio-creator-dashboard",
+  "private": true,
+  "scripts": {
+    "build": "tsc --noEmit && vite build",
+    "dev": "vite",
+    "format": "prettier --write src",
+    "preview": "vite preview",
+    "test": "vitest run"
+  },
+  "type": "module",
+  "version": "0.1.0"
+}

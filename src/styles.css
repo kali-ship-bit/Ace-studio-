@@ -1,0 +1,298 @@
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+
+/*
+ * Fonts are bundled with the app (public/fonts/) — no Google Fonts.
+ * The files are the same variable fonts Google serves (weight 200–800),
+ * downloaded once, so a visitor's browser never contacts Google and
+ * never sends its IP address to a third party just to load the page.
+ * Keep the @font-face URLs and the --font-sans/--font-display names in
+ * sync: the names below are what the whole app already uses.
+ */
+@font-face {
+  font-family: "Plus Jakarta Sans";
+  font-style: normal;
+  font-weight: 200 800;
+  font-display: swap;
+  src: url("/fonts/plus-jakarta-sans.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Bricolage Grotesque";
+  font-style: normal;
+  font-weight: 200 800;
+  font-display: swap;
+  src: url("/fonts/bricolage-grotesque.woff2") format("woff2");
+}
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * Ace Studio design system — single source of truth for all phases.
+ * Dark, video-first. Lemon green = primary action. Teal = secondary tools.
+ */
+
+@theme inline {
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Bricolage Grotesque", "Plus Jakarta Sans", sans-serif;
+  --radius-sm: calc(var(--radius) - 8px);
+  --radius-md: calc(var(--radius) - 4px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-glow: var(--primary-glow);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-teal: var(--teal);
+  --color-pink: var(--pink);
+  --color-pink-foreground: var(--pink-foreground);
+  --color-orange: var(--orange);
+  --color-violet: var(--violet);
+  --color-teal-foreground: var(--teal-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-overlay: var(--overlay);
+  --color-on-video: var(--on-video);
+  --color-avatar-1: var(--avatar-1);
+  --color-avatar-2: var(--avatar-2);
+  --color-avatar-3: var(--avatar-3);
+  --color-avatar-4: var(--avatar-4);
+  --color-avatar-5: var(--avatar-5);
+}
+
+:root {
+  --radius: 1rem;
+  color-scheme: dark;
+  --background: oklch(0.155 0.008 285); /* #0F0F12 */
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.21 0.03 300);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.205 0.012 285);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.85 0.207 129); /* #A3E635 — lemon green */
+  --primary-glow: oklch(0.9 0.179 127); /* #BEF264 */
+  --primary-foreground: oklch(0.16 0.01 285);
+  --secondary: oklch(0.26 0.012 285);
+  --secondary-foreground: oklch(0.96 0 0);
+  --teal: oklch(0.77 0.14 185); /* #00D1C1 */
+  --teal-foreground: oklch(0.16 0.01 285);
+  --pink: oklch(0.7 0.24 355);
+  --pink-foreground: oklch(0.99 0 0);
+  --orange: oklch(0.75 0.18 50);
+  --violet: oklch(0.68 0.2 300);
+  --muted: oklch(0.24 0.01 285);
+  --muted-foreground: oklch(0.84 0.03 300);
+  --accent: oklch(0.27 0.014 285);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.65 0.22 25);
+  --destructive-foreground: oklch(0.985 0 0);
+  --border: oklch(1 0 0 / 9%);
+  --input: oklch(1 0 0 / 12%);
+  --ring: oklch(0.85 0.207 129);
+  --overlay: oklch(0.1 0.005 285);
+  --on-video: oklch(0.99 0 0);
+  --avatar-1: oklch(0.85 0.207 129);
+  --avatar-2: oklch(0.77 0.14 185);
+  --avatar-3: oklch(0.7 0.17 25);
+  --avatar-4: oklch(0.72 0.15 145);
+  --avatar-5: oklch(0.72 0.13 250);
+
+  --gradient-primary: linear-gradient(135deg, var(--primary), var(--primary-glow));
+  --gradient-video-bottom: linear-gradient(
+    to top,
+    oklch(0.1 0.005 285 / 0.92) 0%,
+    oklch(0.1 0.005 285 / 0.45) 35%,
+    transparent 65%
+  );
+  --gradient-video-top: linear-gradient(to bottom, oklch(0.1 0.005 285 / 0.7) 0%, transparent 100%);
+  --shadow-glow: 0 8px 30px -6px color-mix(in oklab, var(--primary) 55%, transparent);
+  --shadow-sheet: 0 -20px 60px -10px oklch(0 0 0 / 0.6);
+  --shadow-editor-vignette: inset 0 0 80px color-mix(in oklab, var(--overlay) 60%, transparent);
+  --texture-editor-grain: radial-gradient(
+    color-mix(in oklab, var(--on-video) 40%, transparent) 1px,
+    transparent 1px
+  );
+}
+
+/*
+ * Light palette: applies when <html> has no `dark` class (see
+ * src/lib/settings/theme.ts — the saved theme is "ace-studio-theme").
+ * The accent colours (teal, pink, orange, violet) and the video
+ * overlays stay the same: video text still needs a dark scrim.
+ */
+:root:not(.dark) {
+  color-scheme: light;
+  --background: oklch(0.975 0.002 285); /* #F7F7F8 */
+  --foreground: oklch(0.18 0.01 285);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.18 0.01 285);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.18 0.01 285);
+  --primary: oklch(0.77 0.204 131); /* #84CC16 — deeper lemon green for light mode */
+  --primary-glow: oklch(0.85 0.207 129); /* #A3E635 */
+  --primary-foreground: oklch(0.16 0.01 285);
+  --secondary: oklch(0.94 0.005 285);
+  --secondary-foreground: oklch(0.2 0.01 285);
+  --muted: oklch(0.95 0.005 285);
+  --muted-foreground: oklch(0.45 0.012 285);
+  --accent: oklch(0.93 0.008 285);
+  --accent-foreground: oklch(0.18 0.01 285);
+  --destructive: oklch(0.55 0.22 25);
+  --destructive-foreground: oklch(0.99 0 0);
+  --border: oklch(0 0 0 / 10%);
+  --input: oklch(0 0 0 / 14%);
+  --ring: oklch(0.77 0.204 131);
+  --shadow-sheet: 0 -20px 60px -10px oklch(0 0 0 / 0.25);
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+  html,
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    overscroll-behavior: none;
+    /* No page-level horizontal scroll: every page is a 480px column
+     * (720px on the editor) and the only sideways scrolling is inside
+     * the intentional carousels (overflow-x-auto). `clip` — not
+     * `hidden` — so the sticky header in create.tsx keeps working. */
+    overflow-x: clip;
+  }
+}
+
+@utility font-display {
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
+}
+@utility bg-gradient-primary {
+  background-image: var(--gradient-primary);
+}
+@utility bg-video-bottom {
+  background-image: var(--gradient-video-bottom);
+}
+@utility bg-video-top {
+  background-image: var(--gradient-video-top);
+}
+@utility shadow-glow {
+  box-shadow: var(--shadow-glow);
+}
+@utility shadow-sheet {
+  box-shadow: var(--shadow-sheet);
+}
+@utility glass {
+  background-color: oklch(0.1 0.005 285 / 0.45);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+@utility text-shadow-video {
+  text-shadow: 0 1px 8px oklch(0 0 0 / 0.6);
+}
+@utility no-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+@utility animate-kenburns {
+  animation: kenburns 18s ease-in-out infinite alternate;
+}
+@utility animate-pop {
+  animation: pop 0.45s cubic-bezier(0.2, 1.6, 0.4, 1);
+}
+@utility animate-spin-slow {
+  animation: spin 5s linear infinite;
+}
+
+@keyframes kenburns {
+  from {
+    transform: scale(1.04) translate(0, 0);
+  }
+  to {
+    transform: scale(1.16) translate(-2%, -3%);
+  }
+}
+@keyframes pop {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.35);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.editor-vignette {
+  box-shadow: var(--shadow-editor-vignette);
+}
+.editor-grain {
+  opacity: 0.2;
+  background-image: var(--texture-editor-grain);
+  background-size: 3px 3px;
+}
+
+@utility text-gradient-stories {
+  background: linear-gradient(90deg, var(--pink), var(--orange));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+@utility text-gradient-create {
+  background: linear-gradient(90deg, var(--primary), var(--orange));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+@utility text-gradient-review {
+  background: linear-gradient(90deg, var(--teal), var(--violet));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+@utility text-gradient-library {
+  background: linear-gradient(90deg, var(--violet), var(--pink));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+@utility text-gradient-editor {
+  background: linear-gradient(90deg, var(--pink), var(--violet));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+@utility text-gradient-dashboard {
+  background: linear-gradient(90deg, var(--orange), var(--pink), var(--violet));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+@utility bg-home-header {
+  background-image: linear-gradient(
+    180deg,
+    color-mix(in oklab, var(--violet) 55%, transparent),
+    color-mix(in oklab, var(--pink) 25%, transparent) 60%,
+    transparent
+  );
+}

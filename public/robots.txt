@@ -1,0 +1,58 @@
+# Ace Studio — crawlers welcome, including AI crawlers.
+# Every page renders its text on the server, so a crawler reads the
+# real words without running JavaScript.
+#
+# NOTE: there is intentionally no "Sitemap:" line here yet. The sitemap
+# lives at /sitemap.xml — the standard location crawlers check — but its
+# URLs need the site's real public address, which is only known once
+# SITE_URL is set at deploy time. The sitemap itself is served with the
+# correct address (see src/server.ts); a hardcoded address here would
+# go stale or, worse, point at a domain that was never real.
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: Meta-ExternalAgent
+Allow: /
+
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Twitterbot
+Allow: /
+
+User-agent: facebookexternalhit
+Allow: /
+
+User-agent: *
+Allow: /

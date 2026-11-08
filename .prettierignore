@@ -1,0 +1,14 @@
+node_modules
+dist
+.output
+.vinxi
+pnpm-lock.yaml
+package-lock.json
+bun.lock
+routeTree.gen.ts
+# Historical reports — frozen; formatting them would rewrite history.
+STEPS_02_REPORT.md
+REELKALI_BACKEND_REPORT.md
+SECRETS_SCAN.md
+BUILD_REPORT.md
+PULL_REPORT.md
