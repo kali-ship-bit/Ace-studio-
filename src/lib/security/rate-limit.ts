@@ -51,6 +51,8 @@ export const API_WINDOW_MS = 60 * 1000;
 
 /** Avatar uploads are heavy (up to 2 MB into Storage): 10 a minute. */
 export const AVATAR_MAX_PER_MINUTE = 10;
+/** Profile edits are small but write to the database: 10 a minute. */
+export const PROFILE_MAX_PER_MINUTE = 10;
 /**
  * Paid / publishing routes get a stricter guard: narration burns the
  * Speechify allowance (2,000 chars a request) and a post publishes to a

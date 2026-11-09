@@ -7,12 +7,16 @@
 import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 
 export default defineConfig({
-  // Nitro preset: node-server, NOT Cloudflare. The backend moved to
+  // Nitro preset: node-server by default, NOT Cloudflare. The backend moved to
   // Supabase (see REELKALI_BACKEND_REPORT.md) and the app must run on
   // any plain Node host — the config's cloudflare-module default would
   // build a Worker bundle this app can no longer use (node:fs job store,
-  // node:crypto session ids). Set NITRO_PRESET to override per deploy.
-  nitro: { preset: "node-server" },
+  // node:crypto session ids). Set NITRO_PRESET=vercel to build the Vercel
+  // output instead (the env var wins over the default below); any other
+  // value, or no value, keeps node-server.
+  nitro: {
+    preset: (process.env["NITRO_PRESET"] as "vercel" | "node-server" | undefined) ?? "node-server",
+  },
   tanstackStart: {
     // Redirect TanStack Start's bundled server entry to src/server.ts (our SSR error wrapper).
     // nitro/vite builds from this

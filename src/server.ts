@@ -6,6 +6,7 @@ import { handleApiRequest } from "./lib/jobs/api";
 import { handleAuthApi } from "./lib/auth/api";
 import { handlePostingApi } from "./lib/posting/api";
 import { handleAvatarApi } from "./lib/settings/avatar-api";
+import { handleProfileApi } from "./lib/settings/profile-api";
 import { getPublicAppSettings, handleAppSettingsApi } from "./lib/settings/app-settings";
 import { buildSitemapXml } from "./lib/seo";
 import { getSiteUrl } from "./lib/supabase/env";
@@ -107,6 +108,7 @@ export default {
       //   /api/auth/*           login, signup, reset, CSRF token, logout
       //   /api/post/*           social posting (Instagram first)
       //   /api/settings/avatar  profile-picture upload
+      //   /api/settings/profile profile fields (display name, username, bio)
       //   /api/app-settings     public switches (maintenance, announcement)
       //   /api/jobs, /api/narrate, /api/voices, /api/settings/keys
       const authResponse = await handleAuthApi(request);
@@ -115,6 +117,8 @@ export default {
       if (postingResponse) return withSecurityHeaders(postingResponse, headerOptions());
       const avatarResponse = await handleAvatarApi(request);
       if (avatarResponse) return withSecurityHeaders(avatarResponse, headerOptions());
+      const profileResponse = await handleProfileApi(request);
+      if (profileResponse) return withSecurityHeaders(profileResponse, headerOptions());
       const appSettingsResponse = await handleAppSettingsApi(request);
       if (appSettingsResponse) {
         return withSecurityHeaders(appSettingsResponse, headerOptions());

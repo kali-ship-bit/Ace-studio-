@@ -13,6 +13,11 @@ const SQL = readFileSync(
   "utf-8",
 );
 
+const SQL_003 = readFileSync(
+  join(process.cwd(), "supabase/migrations/003_profile_fields.sql"),
+  "utf-8",
+);
+
 describe("migration 001 — security tripwires", () => {
   it("blocks ordinary users from granting themselves admin (trigger)", () => {
     expect(SQL).toContain("prevent_is_admin_change");
@@ -41,5 +46,25 @@ describe("migration 001 — security tripwires", () => {
   it("has no dead updated_at column on auth_attempts (nothing maintains it)", () => {
     const block = SQL.slice(SQL.indexOf("create table if not exists public.auth_attempts"));
     expect(block.slice(0, 600)).not.toContain("updated_at");
+  });
+});
+
+describe("migration 003 — profile fields", () => {
+  it("adds display_name, username and bio to profiles", () => {
+    for (const column of ["display_name", "username", "bio"]) {
+      expect(SQL_003).toContain(`add column if not exists ${column} text`);
+    }
+  });
+
+  it("caps the field lengths in the database, not just the UI", () => {
+    expect(SQL_003).toContain("char_length(display_name) <= 50");
+    expect(SQL_003).toContain("char_length(bio) <= 160");
+    expect(SQL_003).toContain("username ~ '^[a-z0-9_]{3,30}$'");
+  });
+
+  it("keeps usernames unique without blocking users who have none yet", () => {
+    expect(SQL_003).toContain("profiles_username_unique_idx");
+    expect(SQL_003).toContain("create unique index");
+    expect(SQL_003).toContain("where username is not null");
   });
 });

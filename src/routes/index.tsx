@@ -1,6 +1,6 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Bell, Search, X } from "lucide-react";
+import { Bell, Search, User, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
   CATEGORIES,
@@ -45,6 +45,17 @@ const TABS: { id: FeedTab; label: string }[] = [
   { id: "mine", label: "My Videos" },
 ];
 
+/**
+ * What the round profile icon in the Home header shows. Until the
+ * session check answers, the icon looks signed out — the feed must
+ * never wait on auth, and a failed check falls back to the same
+ * signed-out icon instead of breaking the page.
+ */
+type ProfileState =
+  | { status: "unknown" }
+  | { status: "signedOut" }
+  | { status: "signedIn"; email: string; avatarUrl: string | null };
+
 function Home() {
   const pipeline = usePipeline();
   const unread = pipeline.videos.flatMap((v) => v.notices).filter((n) => !n.read).length;
@@ -59,6 +70,45 @@ function Home() {
   const [query, setQuery] = useState("");
   const [pendingScrollId, setPendingScrollId] = useState<string | null>(null);
   const scroller = useRef<HTMLDivElement>(null);
+
+  // Profile icon state: who is signed in, from the session cookie
+  // (GET /api/auth/me, 401 when signed out). The picture comes from
+  // GET /api/settings/avatar when signed in; any failure there just
+  // means the icon shows the email initial instead. Both calls are
+  // best-effort — the feed works the same without them.
+  const [profile, setProfile] = useState<ProfileState>({ status: "unknown" });
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const me = await fetch("/api/auth/me", { credentials: "same-origin" });
+        if (!me.ok) {
+          if (!cancelled) setProfile({ status: "signedOut" });
+          return;
+        }
+        const meData = (await me.json()) as { user?: { email?: string } };
+        const email = typeof meData.user?.email === "string" ? meData.user.email : "";
+        let avatarUrl: string | null = null;
+        try {
+          const avatarRes = await fetch("/api/settings/avatar", {
+            credentials: "same-origin",
+          });
+          if (avatarRes.ok) {
+            const avatarData = (await avatarRes.json()) as { avatarUrl?: string | null };
+            avatarUrl = avatarData.avatarUrl ?? null;
+          }
+        } catch {
+          // Picture is a nicety; the initial below is the fallback.
+        }
+        if (!cancelled) setProfile({ status: "signedIn", email, avatarUrl });
+      } catch {
+        if (!cancelled) setProfile({ status: "signedOut" });
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const videos = useMemo(
     () => filterFeed(FEED, tab, category, followed),
@@ -141,14 +191,17 @@ function Home() {
               </button>
             ))}
           </nav>
-          <IconBtn label="Notifications" onClick={() => setPanel("notifications")}>
-            <Bell className="h-6 w-6" />
-            {unread > 0 && (
-              <span className="absolute right-1.5 top-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-bold text-primary-foreground">
-                {unread > 99 ? "99+" : unread}
-              </span>
-            )}
-          </IconBtn>
+          <div className="flex items-center gap-2">
+            <IconBtn label="Notifications" onClick={() => setPanel("notifications")}>
+              <Bell className="h-6 w-6" />
+              {unread > 0 && (
+                <span className="absolute right-1.5 top-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-bold text-primary-foreground">
+                  {unread > 99 ? "99+" : unread}
+                </span>
+              )}
+            </IconBtn>
+            <ProfileBtn profile={profile} />
+          </div>
         </div>
         <div className="no-scrollbar mt-2 flex gap-2 overflow-x-auto px-3 pb-2">
           <Chip active={category === null} onClick={() => setCategory(null)}>
@@ -292,6 +345,39 @@ function IconBtn({
       className="glass relative flex h-11 w-11 items-center justify-center rounded-full text-on-video"
     >
       {children}
+    </button>
+  );
+}
+
+/**
+ * Round profile icon, top-right of the Home header next to the bell —
+ * the way into the account, like other apps. Signed out (or while the
+ * check is still running) it is a plain person icon that goes to
+ * /login, where "Create an account" leads to /signup. Signed in it
+ * shows the profile picture, or the email initial when there is no
+ * picture, and goes to /profile — your own page with your picture,
+ * your videos and a link to Settings (where "Log out" lives at the
+ * bottom of that page, and only there).
+ */
+function ProfileBtn({ profile }: { profile: ProfileState }) {
+  const navigate = useNavigate();
+  const signedIn = profile.status === "signedIn";
+  const initial = signedIn ? profile.email.trim().charAt(0).toUpperCase() : "";
+  return (
+    <button
+      onClick={() => navigate({ to: signedIn ? "/profile" : "/login" })}
+      aria-label={signedIn ? "Profile" : "Sign in"}
+      className="glass relative flex h-11 w-11 items-center justify-center overflow-hidden rounded-full text-on-video"
+    >
+      {signedIn && profile.avatarUrl ? (
+        <img src={profile.avatarUrl} alt="" className="h-full w-full object-cover" />
+      ) : signedIn && initial ? (
+        <span className="text-lg font-bold" aria-hidden="true">
+          {initial}
+        </span>
+      ) : (
+        <User className="h-6 w-6" />
+      )}
     </button>
   );
 }

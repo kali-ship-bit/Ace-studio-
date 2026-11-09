@@ -5,7 +5,7 @@ import { getRouter } from "./router";
  * Route table: every page the app promises must actually be registered.
  * A renamed or deleted route file silently drops its page (TanStack
  * Start is file-based), and a typo'd Link would 404 — this test pins
- * the 13 pages so a missing one fails the suite instead of the user.
+ * the 14 pages so a missing one fails the suite instead of the user.
  */
 const EXPECTED_PATHS = [
   "/",
@@ -16,6 +16,7 @@ const EXPECTED_PATHS = [
   "/library",
   "/login",
   "/narrate",
+  "/profile",
   "/reset-password",
   "/review",
   "/settings",

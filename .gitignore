@@ -37,3 +37,5 @@ dist-ssr
 # Jobs (Step 0): job records + generated audio live here locally.
 # Never versioned — swap for D1 + R2 when deployed.
 data/
+.vercel
+.env*

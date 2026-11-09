@@ -6,9 +6,12 @@ pnpm-lock.yaml
 package-lock.json
 bun.lock
 routeTree.gen.ts
+# SQL migrations — prettier has no SQL parser; formatting them errors.
+*.sql
 # Historical reports — frozen; formatting them would rewrite history.
 STEPS_02_REPORT.md
 REELKALI_BACKEND_REPORT.md
 SECRETS_SCAN.md
 BUILD_REPORT.md
 PULL_REPORT.md
+AUDIT_REPORT_2026-11-08.md

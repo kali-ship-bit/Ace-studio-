@@ -1,6 +1,13 @@
 import { describe, expect, it } from "vitest";
 import { getRouter } from "../router";
-import { buildSitemapXml, canonicalUrl, KNOWN_PATHS, resolveSiteBase, siteBaseUrl } from "./seo";
+import {
+  buildSitemapXml,
+  canonicalUrl,
+  KNOWN_PATHS,
+  PRIVATE_PATHS,
+  resolveSiteBase,
+  siteBaseUrl,
+} from "./seo";
 
 describe("resolveSiteBase", () => {
   it("accepts an https URL and returns its origin", () => {
@@ -30,7 +37,9 @@ describe("canonicalUrl", () => {
   });
 
   it("keeps the trailing slash on the home page", () => {
-    expect(canonicalUrl("/", "https://ace-studio.example.com")).toBe("https://ace-studio.example.com/");
+    expect(canonicalUrl("/", "https://ace-studio.example.com")).toBe(
+      "https://ace-studio.example.com/",
+    );
   });
 
   it("strips a trailing slash from other pages", () => {
@@ -73,14 +82,23 @@ describe("buildSitemapXml", () => {
 });
 
 describe("known paths match the route table", () => {
-  it("every known path is a registered route and every route is known", () => {
+  it("every known or private path is a registered route and every route is known or private", () => {
     const router = getRouter();
     const paths = Object.keys(router.routesByPath).filter((p) => p !== "__root__");
-    for (const path of KNOWN_PATHS) {
+    const listed = [...KNOWN_PATHS, ...PRIVATE_PATHS];
+    for (const path of listed) {
       expect(paths).toContain(path);
     }
     for (const path of paths) {
-      expect(KNOWN_PATHS).toContain(path);
+      expect(listed).toContain(path);
     }
+  });
+
+  it("private pages never appear in the sitemap or get a canonical URL", () => {
+    const xml = buildSitemapXml("https://ace-studio.example.com");
+    for (const path of PRIVATE_PATHS) {
+      expect(xml).not.toContain(`<loc>https://ace-studio.example.com${path}</loc>`);
+    }
+    expect(canonicalUrl("/profile", "https://ace-studio.example.com")).toBeUndefined();
   });
 });

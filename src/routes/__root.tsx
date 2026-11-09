@@ -28,8 +28,7 @@ function NotFoundComponent() {
           404 — Page not found
         </h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          This page does not exist in Ace Studio, or it has been moved. Head back and keep
-          creating.
+          This page does not exist in Ace Studio, or it has been moved. Head back and keep creating.
         </p>
         <div className="mt-6 flex flex-col gap-3">
           <Link

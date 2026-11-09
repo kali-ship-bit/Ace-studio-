@@ -32,12 +32,12 @@
 
 ## Local build — structure after the 2026-11-07 review
 
-- Backend is **Supabase, not Cloudflare**: `vite.config.ts` pins the Nitro preset to `node-server`; the build output is a plain Node server (`.output/server/index.mjs`). Never re-add a Cloudflare preset or wrangler references.
+- Backend is **Supabase, not Cloudflare**: `vite.config.ts` defaults the Nitro preset to `node-server` (set `NITRO_PRESET=vercel` to build the Vercel output instead); the default build output is a plain Node server (`.output/server/index.mjs`). Never re-add a Cloudflare preset or wrangler references.
 - `.env.example` is the only env template (copy it to `.dev.vars` locally). Historical reports (`STEPS_02_REPORT.md`, `REELKALI_BACKEND_REPORT.md`, `SECRETS_SCAN.md`, `BUILD_REPORT.md`, `PULL_REPORT.md`) are frozen history — do not update them.
 - Job storage is per-request: signed-in users get the Supabase store (`src/lib/supabase/job-store.ts`, RLS-backed), anonymous/demo use the file store (`src/lib/jobs/store.ts`). The resolver is `getJobStoreForRequest()` in `src/lib/jobs/store.ts`.
 - Rate limits live in Supabase when configured (`getDefaultAttemptStore()`), else in process memory. CSRF failures are always `403 csrf_invalid`. Validation runs before rate limiting on mutating routes.
 - Theme is light + dark: `src/styles.css` has both palettes, `__root.tsx` applies the saved theme before first paint. The Toaster follows the live theme.
 - `src/components/ui/` holds only the 12 shadcn components the app actually imports (button, dialog, drawer, input, input-otp, label, separator, sheet, skeleton, slider, toggle, tooltip). The other shadcn files were deleted as unused; the Toaster comes from the `sonner` package directly.
 - `tsconfig.json` has `noUnusedLocals` and `noUnusedParameters` on — keep them on.
-- Tests live beside the code they test. The route table is pinned in `src/router.test.ts` (13 pages).
+- Tests live beside the code they test. The route table is pinned in `src/router.test.ts` (14 pages).
 - Creator dashboard (`creator-dashboard/`) is a separate app with its own build/tests; its admin-status check is tri-state (`admin | not-admin | error`).

@@ -859,8 +859,8 @@ function Editor({
               </Button>
             </div>
             <p className="text-xs text-muted-foreground">
-              Drag the lemon-green edges on the timeline to trim, drag clips to reorder. Split cuts at
-              the playhead.
+              Drag the lemon-green edges on the timeline to trim, drag clips to reorder. Split cuts
+              at the playhead.
             </p>
             <textarea
               value={selClip.prompt}

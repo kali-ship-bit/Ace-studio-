@@ -42,6 +42,16 @@ export const KNOWN_PATHS = [
   "/stories",
 ] as const;
 
+/**
+ * Pages that exist but are private — never listed in the public
+ * sitemap and never given a canonical URL. /profile shows one
+ * person's own account, so crawlers must not be pointed at it (the
+ * page itself also carries a noindex meta tag). The route table still
+ * pins these pages (see src/router.test.ts); the agreement check in
+ * seo.test.ts counts KNOWN_PATHS + PRIVATE_PATHS together.
+ */
+export const PRIVATE_PATHS = ["/profile"] as const;
+
 function normalizePath(pathname: string): string {
   if (pathname === "/") return "/";
   return pathname.endsWith("/") ? pathname.slice(0, -1) : pathname;
